@@ -13,6 +13,9 @@ services:
     depends_on:
       - mongo
       - redis
+    networks:
+      - api-network
+      - db-network
 
   mongo:
     image: mongo:8.0-rc
@@ -24,12 +27,17 @@ services:
       - mongo_data:/data/db
     ports:
       - '27017:27017'
+    networks:
+      - db-network
+      - mongo-express-network
 
   redis:
     image: redis:alpine
     container_name: redis
     ports:
       - '6379:6379'
+    networks:
+      - api-network
 
   mongo-express:
     image: mongo-express:1.0-20-alpine3.19
@@ -42,6 +50,15 @@ services:
       - '8081:8081'
     depends_on:
       - mongo
+    networks:
+      - mongo-express-network
 
 volumes:
   mongo_data:
+
+networks:
+  api-network:
+  db-network:
+  mongo-express-network:
+
+
