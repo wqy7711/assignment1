@@ -7,7 +7,7 @@ services:
     ports:
       - '9000:9000'
     environment:
-      MONGODB_URI: "mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongo:27017"
+      MONGODB_URI: "mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongo:27017/tmdb_movies?authSource=admin"
       REDIS_URI: "redis://redis:6379"
       ENABLE_WRITING_HANDLERS: 'false'
     depends_on:
@@ -30,6 +30,20 @@ services:
     networks:
       - db-network
       - mongo-express-network
+
+  mongo-seed:
+    image: mongo
+    container_name: mongo-seed
+    depends_on:
+      - mongo
+    volumes:
+      - ./seeding.json:/seeding.json
+    command: >
+      mongoimport --host mongo --db tmdb_movies --collection movies
+      --type json --file /seeding.json --jsonArray
+      -u ${MONGODB_USERNAME} -p ${MONGODB_PASSWORD} --authenticationDatabase admin
+    networks:
+      - db-network
 
   redis:
     image: redis:alpine
@@ -60,5 +74,4 @@ networks:
   api-network:
   db-network:
   mongo-express-network:
-
 
