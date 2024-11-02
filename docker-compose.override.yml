@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mongo-seed:
+    image: mongo
+    container_name: mongo-seed
+    depends_on:
+      - mongo
+    volumes:
+      - ./seeding.json:/seeding.json
+    command: >
+      mongoimport --host mongo --db tmdb_movies --collection movies
+      --type json --file /seeding.json --jsonArray
+      -u ${MONGODB_USERNAME} -p ${MONGODB_PASSWORD} --authenticationDatabase admin
+    networks:
+      - db-network
+
+  mongo-express:
+    image: mongo-express:1.0-20-alpine3.19
+    container_name: mongo-express
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: "${MONGODB_USERNAME}"
+      ME_CONFIG_MONGODB_ADMINPASSWORD: "${MONGODB_PASSWORD}"
+      ME_CONFIG_MONGODB_SERVER: "mongo"
+    ports:
+      - '8081:8081'
+    depends_on:
+      - mongo
+    networks:
+      - db-network
