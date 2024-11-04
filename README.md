@@ -1,14 +1,13 @@
-## Agile Software Practice - Assignment 1.
+## Docker Assignment - Agile Software Practice.
 
-Description: This is a Docker-based application that includes a movies-api service, MongoDB database, Redis cache service, and optional services for development such as Mongo Express and Mongo Seed for data management and initialization.
+__Name:__ ....QiYi Wang .....
 
-Features:
-Movies API: Provides a RESTful API for retrieving and managing movie data.
-MongoDB: Database for storing movie-related information.
-Redis: Cache service to enhance API response performance.
-Mongo Express (Development Only): Web interface for MongoDB database management.
-Mongo Seed (Development Only): Initializes database data.
+__Demo:__ .... https://youtu.be/glZ_78fqfvY ....
 
-Requirements:
-Docker: 20.10+
-Docker Compose: 1.29+
+### Database Seeding.
+
+[Database auto-populate is implemented through the mongo-seed service defined in the docker-compose file. The service mounted a seeding.json file containing the data and used the mongoimport command to import the data into the MongoDB database, automating the database initialization process.]
+
+### M.ulti-Stack.
+
+[The development environment stack is configured through the docker-compose.override.yml file, adding mongo-seed for auto-populate the database and mongo-express for visually managing the database. The production stack is configured through the docker-compose.prod.yml file, omitting the development tools mongo-seed and mongo-express, and setting the api service to have full write permission.]
